@@ -24,4 +24,29 @@ var authed = false;
 const SCOPES =
     "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile";
 
+app.get("/google/callback", function (req, res) {
+  const code = req.query.code;
+  if (code) {
+    // Get an access token based on our OAuth code
+    oAuth2Client.getToken(code, function (err, tokens) {
+      if (err) {
+        console.log("Error authenticating");
+        console.log(err);
+      } else {
+        console.log("Successfully authenticated");
+        console.log(tokens)
+        oAuth2Client.setCredentials(tokens);
+
+
+        authed = true;
+        res.redirect("/");
+      }
+    });
+  }
+});
+
+app.listen(5000, () => {
+  console.log("App is listening on Port 5000");
+});
+
 
