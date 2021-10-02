@@ -77,6 +77,7 @@ app.get("/", (req, res) => {
   }
 });
 
+
 app.post("/upload", (req, res) => {
   upload(req, res, function (err) {
     if (err) {
@@ -112,10 +113,13 @@ app.post("/upload", (req, res) => {
     }
   });
 });
+'
+
 
 
 app.listen(5000, () => {
   console.log("App is listening on Port 5000");
 });
+
 
 
