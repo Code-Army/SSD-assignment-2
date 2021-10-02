@@ -45,6 +45,7 @@ app.get("/google/callback", function (req, res) {
   }
 });
 
+
 app.get("/", (req, res) => {
   if (!authed) {
     // Generate an OAuth URL and redirect there
@@ -76,6 +77,11 @@ app.get("/", (req, res) => {
   }
 });
 
+
+
 app.listen(5000, () => {
   console.log("App is listening on Port 5000");
 });
+
+
+
