@@ -24,9 +24,6 @@ var authed = false;
 const SCOPES =
     "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile";
 
-
-
-
 app.get("/google/callback", function (req, res) {
   const code = req.query.code;
   if (code) {
@@ -47,7 +44,6 @@ app.get("/google/callback", function (req, res) {
     });
   }
 });
-
 
 app.get("/", (req, res) => {
   if (!authed) {
@@ -79,7 +75,6 @@ app.get("/", (req, res) => {
     });
   }
 });
-
 
 app.listen(5000, () => {
   console.log("App is listening on Port 5000");
