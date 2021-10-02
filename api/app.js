@@ -45,8 +45,43 @@ app.get("/google/callback", function (req, res) {
   }
 });
 
+
+app.get("/", (req, res) => {
+  if (!authed) {
+    // Generate an OAuth URL and redirect there
+    var url = oAuth2Client.generateAuthUrl({
+      access_type: "offline",
+      scope: SCOPES,
+    });
+    console.log(url);
+    res.render("index", { url: url });
+  } else {
+    var oauth2 = google.oauth2({
+      auth: oAuth2Client,
+      version: "v2",
+    });
+    oauth2.userinfo.get(function (err, response) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(response.data);
+        name = response.data.name
+        pic = response.data.picture
+        res.render("success", {
+          name: response.data.name,
+          pic: response.data.picture,
+          success:false
+        });
+      }
+    });
+  }
+});
+
+
+
 app.listen(5000, () => {
   console.log("App is listening on Port 5000");
 });
+
 
 
