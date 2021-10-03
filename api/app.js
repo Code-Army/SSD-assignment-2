@@ -103,6 +103,8 @@ app.get("/", (req, res) => {
 });
 
 
+
+
 app.post("/upload", (req, res) => {
   upload(req, res, function (err) {
     if (err) {
@@ -130,7 +132,20 @@ app.post("/upload", (req, res) => {
               console.error(err);
             } else {
               fs.unlinkSync(req.file.path)
-              res.render("success",{name:name,pic:pic,success:true})
+              //GetCalender Service
+              googleCalenderService.listEvents(oAuth2Client, (events) => {  
+                console.log(events);
+                events_list = events         
+                 
+            });
+            
+            //Passed parameters
+            if(events_list.length === 0 ){
+              res.render("success",{name:name,pic:pic,success:true,lists:false,events:events_list});
+            }else{
+              res.render("success",{name:name,pic:pic,success:true,lists:true,events:events_list});
+            }
+             
             }
 
           }
