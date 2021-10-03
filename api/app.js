@@ -2,12 +2,13 @@ const fs = require("fs");
 const express = require("express");
 const multer = require("multer");
 const OAuth2Data = require("../config/credentials.json");
-var name,pic
+const googleCalenderService =require('../services/google-calendar.service');
+var name,pic,events_list = []
 
 const { google } = require("googleapis");
 
 const app = express();
-
+const data= {}
 
 const CLIENT_ID = OAuth2Data.web.client_id;
 const CLIENT_SECRET = OAuth2Data.web.client_secret;
@@ -18,11 +19,15 @@ const oAuth2Client = new google.auth.OAuth2(
     CLIENT_SECRET,
     REDIRECT_URL
 );
+
 var authed = false;
 
 // If modifying these scopes, delete token.json.
 const SCOPES =
-    "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile";
+    "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile";
+
+app.set("view engine", "ejs");
+app.use(express.static("public"));
 
 app.get("/google/callback", function (req, res) {
   const code = req.query.code;
