@@ -1,10 +1,7 @@
 const fs = require("fs");
 const express = require("express");
 const multer = require("multer");
-
-//set google api credentials file
 const OAuth2Data = require("../config/credentials.json");
-//add calender API serives
 const googleCalenderService =require('../services/google-calendar.service');
 var name,pic,events_list = []
 
@@ -13,7 +10,6 @@ const { google } = require("googleapis");
 const app = express();
 const data= {}
 
-//set credentials
 const CLIENT_ID = OAuth2Data.web.client_id;
 const CLIENT_SECRET = OAuth2Data.web.client_secret;
 const REDIRECT_URL = OAuth2Data.web.redirect_uris[0];
@@ -26,34 +22,25 @@ const oAuth2Client = new google.auth.OAuth2(
 
 var authed = false;
 
-// Required scopes,
+// If modifying these scopes, delete token.json.
 const SCOPES =
     "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile";
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-//route for getting the access token
-app.get("/google/callback", function (req, res) {
-  const code = req.query.code;
-  //if the authorization code is available get the access token
-  if (code) {
-
-    oAuth2Client.getToken(code, function (err, tokens) {
-      if (err) {
-        console.log("Error authenticating");
-        console.log(err);
-      } else {
-        console.log("Successfully authenticated");
-        console.log(tokens)
-        oAuth2Client.setCredentials(tokens);
-        authed = true;
-        res.redirect("/");
-      }
-    });
-  }
+var Storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./file");
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+  },
 });
 
+var upload = multer({
+  storage: Storage,
+}).single("file"); //Field name and max count
 
 app.get("/", (req, res) => {
   if (!authed) {
@@ -69,7 +56,7 @@ app.get("/", (req, res) => {
       auth: oAuth2Client,
       version: "v2",
     });
-	//Get User Info
+
     oauth2.userinfo.get(function (err, response) {
       if (err) {
         console.log(err);
@@ -85,7 +72,7 @@ app.get("/", (req, res) => {
           
       });
       
-        //Pass variable to client side
+        //Pass variable
       if(events_list.length === 0 ){
         res.render("success", {name: response.data.name,pic: response.data.picture,success:false,lists:false,events:events_list});
       }else{
@@ -101,7 +88,6 @@ app.get("/", (req, res) => {
 
   }
 });
-
 
 
 
@@ -154,13 +140,31 @@ app.post("/upload", (req, res) => {
   });
 });
 
+app.get('/logout',(req,res) => {
+  authed = false
+  res.redirect('/')
+})
+
+app.get("/google/callback", function (req, res) {
+  const code = req.query.code;
+  if (code) {
+    // Get an access token based on our OAuth code
+    oAuth2Client.getToken(code, function (err, tokens) {
+      if (err) {
+        console.log("Error authenticating");
+        console.log(err);
+      } else {
+        console.log("Successfully authenticated");
+        console.log(tokens)
+        oAuth2Client.setCredentials(tokens);
 
 
-
-
-
-
-
+        authed = true;
+        res.redirect("/");
+      }
+    });
+  }
+});
 
 app.listen(5000, () => {
   console.log("App is listening on Port 5000");
