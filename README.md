@@ -1,7 +1,5 @@
 # SSD-assignment-2
-
-
-How to run ?
+# How to run ?
 
 1. Clone the repository
 
