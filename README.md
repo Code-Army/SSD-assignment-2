@@ -15,8 +15,6 @@ Create new file name "file" in the root directory
 
 npm install
 
-Run the file on 
-
 This will run the application in your localhost environment with port 5000
 
 
