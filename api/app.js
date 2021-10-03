@@ -125,7 +125,24 @@ app.post("/upload", (req, res) => {
             media: media,
             fields: "id",
           },
-         
+          (err, file) => {
+            if (err) {
+              // Handle error
+              console.error(err);
+            } else {
+              fs.unlinkSync(req.file.path)
+              //GetCalender Service
+              googleCalenderService.listEvents(oAuth2Client, (events) => {  
+                console.log(events);
+                events_list = events         
+                 
+            });
+            
+          
+             
+            }
+
+          }
       );
     }
   });
