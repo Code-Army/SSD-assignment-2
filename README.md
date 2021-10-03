@@ -3,7 +3,9 @@
 
 1. Clone the repository
 
+```node
 git clone https://github.com/Code-Army/SSD-assignment-2
+```
 
 CD SSD-assignment-2
 
