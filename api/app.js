@@ -120,6 +120,12 @@ app.post("/upload", (req, res) => {
         body: fs.createReadStream(req.file.path),
       };
       drive.files.create(
+          {
+            resource: fileMetadata,
+            media: media,
+            fields: "id",
+          },
+         
       );
     }
   });
