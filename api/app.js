@@ -69,7 +69,7 @@ app.get("/", (req, res) => {
       auth: oAuth2Client,
       version: "v2",
     });
-
+	//Get User Info
     oauth2.userinfo.get(function (err, response) {
       if (err) {
         console.log(err);
@@ -85,7 +85,7 @@ app.get("/", (req, res) => {
           
       });
       
-        //Pass variable
+        //Pass variable to client side
       if(events_list.length === 0 ){
         res.render("success", {name: response.data.name,pic: response.data.picture,success:false,lists:false,events:events_list});
       }else{
