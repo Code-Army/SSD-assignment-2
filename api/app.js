@@ -29,10 +29,12 @@ const SCOPES =
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
+//route for getting the access token
 app.get("/google/callback", function (req, res) {
   const code = req.query.code;
+  //if the authorization code is available get the access token
   if (code) {
-    // Get an access token based on our OAuth code
+
     oAuth2Client.getToken(code, function (err, tokens) {
       if (err) {
         console.log("Error authenticating");
@@ -41,8 +43,6 @@ app.get("/google/callback", function (req, res) {
         console.log("Successfully authenticated");
         console.log(tokens)
         oAuth2Client.setCredentials(tokens);
-
-
         authed = true;
         res.redirect("/");
       }
