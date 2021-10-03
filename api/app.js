@@ -1,7 +1,10 @@
 const fs = require("fs");
 const express = require("express");
 const multer = require("multer");
+
+//set google api credentials file
 const OAuth2Data = require("../config/credentials.json");
+//add calender API serives
 const googleCalenderService =require('../services/google-calendar.service');
 var name,pic,events_list = []
 
@@ -10,6 +13,7 @@ const { google } = require("googleapis");
 const app = express();
 const data= {}
 
+//set credentials
 const CLIENT_ID = OAuth2Data.web.client_id;
 const CLIENT_SECRET = OAuth2Data.web.client_secret;
 const REDIRECT_URL = OAuth2Data.web.redirect_uris[0];
@@ -22,7 +26,7 @@ const oAuth2Client = new google.auth.OAuth2(
 
 var authed = false;
 
-// If modifying these scopes, delete token.json.
+// Required scopes,
 const SCOPES =
     "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile";
 
